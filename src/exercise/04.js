@@ -48,6 +48,7 @@ function Game() {
       return
     }
 
+    // slice extracts up to but not including end
     const newHistory = history.slice(0, currentStep + 1)
     const squaresCopy = [...currentSquares]
     squaresCopy[square] = nextValue
