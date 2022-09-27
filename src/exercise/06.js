@@ -9,25 +9,42 @@ import {PokemonForm} from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
   let [pokemon, setPokemon] = React.useState(null)
+  const [error, setError] = React.useState(null)
 
-    React.useEffect(() => {
-      if(!pokemonName) {
-        return
+  React.useEffect(() => {
+    if(!pokemonName) {
+      return
+    }
+    setPokemon(null)
+
+    // // with .then
+    // fetchPokemon(pokemonName).then(
+    //   pokemonData => { setPokemon(pokemonData) },
+    // )
+
+    // with async await
+    const loadPokemon = async () => {
+      try {const pokemonData = await fetchPokemon(pokemonName)
+      setPokemon(pokemonData)
+      } catch (error) {
+        setError(error)
       }
-      setPokemon(null)
+    }
+    loadPokemon()
+  }, [pokemonName]);
 
-      // // with .then
-      // fetchPokemon(pokemonName).then(
-      //   pokemonData => { setPokemon(pokemonData) },
-      // )
-
-      // with async await
-      const loadPokemon = async () => {
-        const pokemonData = await fetchPokemon(pokemonName)
-        setPokemon(pokemonData)
-      }
-      loadPokemon()
-    }, [pokemonName]);
+  if (error) {
+    return (
+      <div>
+        <div role="alert">
+          There was an error: <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+        </div>
+          <div className="pokemon-info__img-wrapper">
+          <img src="https://c.tenor.com/XUP3-zoM_s0AAAAC/pokemon-squirtle.gif" alt="sad pokemon" />
+        </div>
+      </div>
+    )
+  }
 
   if (!pokemonName) {
     return 'submit a pokemon'
