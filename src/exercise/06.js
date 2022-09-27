@@ -8,7 +8,7 @@ import { PokemonDataView } from "../pokemon";
 import {PokemonForm} from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
-  let [pokemon, setPokemon] = React.useState(null)
+  const [pokemon, setPokemon] = React.useState(null)
   const [error, setError] = React.useState(null)
 
   React.useEffect(() => {
@@ -16,16 +16,17 @@ function PokemonInfo({pokemonName}) {
       return
     }
     setPokemon(null)
+    setError(null)
 
     // // with .then
-    // fetchPokemon(pokemonName).then(
-    //   pokemonData => { setPokemon(pokemonData) },
-    // )
+    // fetchPokemon(pokemonName)
+    //   .then(pokemon => setPokemon(pokemon),)
+    //   .catch(error => setError(error))
 
     // with async await
     const loadPokemon = async () => {
-      try {const pokemonData = await fetchPokemon(pokemonName)
-      setPokemon(pokemonData)
+      try {const pokemon = await fetchPokemon(pokemonName)
+      setPokemon(pokemon)
       } catch (error) {
         setError(error)
       }
