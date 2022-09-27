@@ -15,9 +15,18 @@ function PokemonInfo({pokemonName}) {
         return
       }
       setPokemon(null)
-      fetchPokemon(pokemonName).then(
-        pokemonData => { setPokemon(pokemonData) },
-      )
+
+      // // with .then
+      // fetchPokemon(pokemonName).then(
+      //   pokemonData => { setPokemon(pokemonData) },
+      // )
+
+      // with async await
+      const loadPokemon = async () => {
+        const pokemonData = await fetchPokemon(pokemonName)
+        setPokemon(pokemonData)
+      }
+      loadPokemon()
     }, [pokemonName]);
 
   if (!pokemonName) {
