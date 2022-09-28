@@ -9,14 +9,14 @@ import {PokemonForm} from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
   const [pokemon, setPokemon] = React.useState(null)
+  const [status, setStatus] = React.useState('idle')
   const [error, setError] = React.useState(null)
 
   React.useEffect(() => {
     if(!pokemonName) {
       return
     }
-    setPokemon(null)
-    setError(null)
+    setStatus('pending')
 
     // // with .then
     // fetchPokemon(pokemonName)
@@ -25,16 +25,23 @@ function PokemonInfo({pokemonName}) {
 
     // with async await
     const loadPokemon = async () => {
-      try {const pokemon = await fetchPokemon(pokemonName)
-      setPokemon(pokemon)
+      try {
+        const pokemon = await fetchPokemon(pokemonName)
+        setPokemon(pokemon)
+        setStatus('resolved')
       } catch (error) {
         setError(error)
+        setStatus('rejected')
       }
     }
     loadPokemon()
   }, [pokemonName]);
 
-  if (error) {
+  if (status === 'idle') {
+    return 'submit a pokemon'
+  } else if (status === 'pending') {
+    return <PokemonInfoFallback name={pokemonName} />
+  } else if (status === 'rejected') {
     return (
       <div>
         <div role="alert">
@@ -45,16 +52,9 @@ function PokemonInfo({pokemonName}) {
         </div>
       </div>
     )
-  }
-
-  if (!pokemonName) {
-    return 'submit a pokemon'
-  } else if (!pokemon) {
-    return <PokemonInfoFallback name={pokemonName} />
-  } else {
+  } else if (status === 'resolved') {
     return <PokemonDataView pokemon={pokemon} />
   }
-
 }
 
 function App() {
