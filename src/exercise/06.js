@@ -8,15 +8,18 @@ import { PokemonDataView } from "../pokemon";
 import {PokemonForm} from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
-  const [pokemon, setPokemon] = React.useState(null)
-  const [status, setStatus] = React.useState('idle')
-  const [error, setError] = React.useState(null)
+  const [state, setState] = React.useState({
+    status: 'idle',
+    pokemon: null,
+    error: null
+  })
+  const {status, pokemon, error} = state
 
   React.useEffect(() => {
     if(!pokemonName) {
       return
     }
-    setStatus('pending')
+    setState({status: 'pending'})
 
     // // with .then
     // fetchPokemon(pokemonName)
@@ -27,11 +30,9 @@ function PokemonInfo({pokemonName}) {
     const loadPokemon = async () => {
       try {
         const pokemon = await fetchPokemon(pokemonName)
-        setPokemon(pokemon)
-        setStatus('resolved')
+        setState({status: 'resolved', pokemon})
       } catch (error) {
-        setError(error)
-        setStatus('rejected')
+        setState({status: 'rejected', error})
       }
     }
     loadPokemon()
