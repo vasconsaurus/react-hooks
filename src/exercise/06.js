@@ -10,7 +10,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 function PokemonInfo({pokemonName}) {
   const [state, setState] = React.useState({
-    status: 'idle',
+    status: pokemonName ? 'pending' : 'idle',
     pokemon: null,
     error: null
   })
@@ -57,6 +57,7 @@ function ErrorFallback({error, resetErrorBoundary}) {
         There was an error: {' '}
         <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
       </div>
+      <button onClick={resetErrorBoundary}>Try again</button>
       <div className="pokemon-info__img-wrapper">
         <img src="https://c.tenor.com/XUP3-zoM_s0AAAAC/pokemon-squirtle.gif" alt="sad pokemon" />
       </div>
@@ -76,7 +77,7 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary FallbackComponent={ErrorFallback} key={pokemonName}>
+        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {setPokemonName('')}}>
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
