@@ -6,35 +6,7 @@ import { fetchPokemon } from '../pokemon'
 import { PokemonInfoFallback } from '../pokemon';
 import { PokemonDataView } from "../pokemon";
 import {PokemonForm} from '../pokemon'
-
-class ErrorBoundary extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = { error: null, errorInfo: null}
-  // }
-
-  // // Use componentDidCatch() to log error information
-  // componentDidCatch(error, errorInfo) {
-  //   this.setState({
-  //     error: error,
-  //     errorInfo: errorInfo
-  //   })
-  // }
-  state = {error: null}
-  // // Use static getDerivedStateFromError() to render a fallback UI
-  static getDerivedStateFromError(error){
-    return {error}
-  }
-
-  render() {
-    if (this.state.error) {
-      return (
-        < this.props.FallbackComponent error={this.state.error} />
-      );
-    }
-    return this.props.children
-  }
-}
+import { ErrorBoundary } from 'react-error-boundary';
 
 function PokemonInfo({pokemonName}) {
   const [state, setState] = React.useState({
@@ -78,10 +50,10 @@ function PokemonInfo({pokemonName}) {
   }
 }
 
-function ErrorFallback({error}) {
+function ErrorFallback({error, resetErrorBoundary}) {
   return (
     <div>
-      <div>
+      <div role="alert">
         There was an error: {' '}
         <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
       </div>
